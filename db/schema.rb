@@ -12,7 +12,10 @@
 
 ActiveRecord::Schema.define(version: 20191124042773) do
 
-  create_table "admin_assignments", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4" do |t|
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
+
+  create_table "admin_assignments", id: :serial, force: :cascade do |t|
     t.bigint "user_id", null: false
     t.bigint "job_definition_id", null: false
     t.datetime "created_at"
@@ -20,9 +23,9 @@ ActiveRecord::Schema.define(version: 20191124042773) do
     t.index ["user_id", "job_definition_id"], name: "user_id", unique: true
   end
 
-  create_table "execution_histories", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4" do |t|
+  create_table "execution_histories", id: :serial, force: :cascade do |t|
     t.string "hostname", limit: 180
-    t.integer "worker_id", limit: 1
+    t.integer "worker_id", limit: 2
     t.string "queue", limit: 180, default: "@default", null: false
     t.bigint "job_definition_id", null: false
     t.integer "job_instance_id", null: false
@@ -32,7 +35,7 @@ ActiveRecord::Schema.define(version: 20191124042773) do
     t.index ["worker_id", "started_at"], name: "index_kuroko2_execution_histories_on_worker_id_and_started_at"
   end
 
-  create_table "executions", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4" do |t|
+  create_table "executions", id: :serial, force: :cascade do |t|
     t.string "uuid", limit: 36, null: false
     t.bigint "job_definition_id"
     t.integer "job_definition_version"
@@ -42,21 +45,21 @@ ActiveRecord::Schema.define(version: 20191124042773) do
     t.text "shell", null: false
     t.text "context", null: false
     t.integer "pid"
-    t.text "output", limit: 4294967295
+    t.text "output"
     t.integer "exit_status", limit: 2
-    t.integer "term_signal", limit: 1
+    t.integer "term_signal", limit: 2
     t.datetime "started_at"
     t.datetime "finished_at"
     t.datetime "mailed_at"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string "hostname", limit: 180
-    t.integer "worker_id", limit: 1
+    t.integer "worker_id", limit: 2
     t.index ["job_definition_id", "token_id"], name: "index_kuroko2_executions_on_job_definition_id_and_token_id", unique: true
     t.index ["started_at"], name: "started_at"
   end
 
-  create_table "job_definition_tags", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4" do |t|
+  create_table "job_definition_tags", id: :serial, force: :cascade do |t|
     t.bigint "job_definition_id", null: false
     t.integer "tag_id", null: false
     t.datetime "created_at", null: false
@@ -65,7 +68,7 @@ ActiveRecord::Schema.define(version: 20191124042773) do
     t.index ["tag_id"], name: "job_definition_tags_tag_id"
   end
 
-  create_table "job_definitions", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4" do |t|
+  create_table "job_definitions", force: :cascade do |t|
     t.integer "version", default: 0, null: false
     t.string "name", limit: 180, null: false
     t.text "description", null: false
@@ -84,7 +87,7 @@ ActiveRecord::Schema.define(version: 20191124042773) do
     t.index ["name"], name: "name"
   end
 
-  create_table "job_instances", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4" do |t|
+  create_table "job_instances", id: :serial, force: :cascade do |t|
     t.bigint "job_definition_id"
     t.integer "job_definition_version"
     t.text "script"
@@ -98,7 +101,7 @@ ActiveRecord::Schema.define(version: 20191124042773) do
     t.index ["job_definition_id"], name: "index_kuroko2_job_instances_on_job_definition_id"
   end
 
-  create_table "job_schedules", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4" do |t|
+  create_table "job_schedules", id: :serial, force: :cascade do |t|
     t.bigint "job_definition_id"
     t.string "cron", limit: 180
     t.datetime "created_at"
@@ -106,7 +109,7 @@ ActiveRecord::Schema.define(version: 20191124042773) do
     t.index ["job_definition_id", "cron"], name: "kuroko2_schedules_definition_id_cron_idx", unique: true
   end
 
-  create_table "job_suspend_schedules", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4" do |t|
+  create_table "job_suspend_schedules", id: :serial, force: :cascade do |t|
     t.bigint "job_definition_id"
     t.string "cron", limit: 180
     t.datetime "created_at", null: false
@@ -114,16 +117,16 @@ ActiveRecord::Schema.define(version: 20191124042773) do
     t.index ["job_definition_id", "cron"], name: "kuroko2_suspend_schedules_definition_id_cron_idx", unique: true
   end
 
-  create_table "logs", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4" do |t|
+  create_table "logs", id: :serial, force: :cascade do |t|
     t.integer "job_instance_id"
     t.string "level", limit: 10
-    t.text "message", limit: 4294967295
+    t.text "message"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.index ["job_instance_id"], name: "job_instance_id"
   end
 
-  create_table "memory_consumption_logs", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4" do |t|
+  create_table "memory_consumption_logs", id: :serial, force: :cascade do |t|
     t.integer "job_instance_id"
     t.integer "value", null: false
     t.datetime "created_at", null: false
@@ -131,7 +134,7 @@ ActiveRecord::Schema.define(version: 20191124042773) do
     t.index ["job_instance_id"], name: "index_kuroko2_memory_consumption_logs_on_job_instance_id"
   end
 
-  create_table "memory_expectancies", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4" do |t|
+  create_table "memory_expectancies", id: :serial, force: :cascade do |t|
     t.integer "expected_value", default: 0, null: false
     t.bigint "job_definition_id"
     t.datetime "created_at", null: false
@@ -139,10 +142,10 @@ ActiveRecord::Schema.define(version: 20191124042773) do
     t.index ["job_definition_id"], name: "index_kuroko2_memory_expectancies_on_job_definition_id"
   end
 
-  create_table "process_signals", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4" do |t|
+  create_table "process_signals", id: :serial, force: :cascade do |t|
     t.string "hostname", limit: 180, default: "", null: false
     t.integer "pid", null: false
-    t.integer "number", limit: 1, default: 15, null: false
+    t.integer "number", limit: 2, default: 15, null: false
     t.datetime "started_at"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -152,7 +155,7 @@ ActiveRecord::Schema.define(version: 20191124042773) do
     t.index ["hostname", "started_at"], name: "hostname_started_at"
   end
 
-  create_table "script_revisions", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4" do |t|
+  create_table "script_revisions", force: :cascade do |t|
     t.bigint "job_definition_id", null: false
     t.text "script", null: false
     t.bigint "user_id"
@@ -163,7 +166,7 @@ ActiveRecord::Schema.define(version: 20191124042773) do
     t.index ["user_id"], name: "index_kuroko2_script_revisions_on_user_id"
   end
 
-  create_table "stars", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4" do |t|
+  create_table "stars", id: :serial, force: :cascade do |t|
     t.bigint "user_id", null: false
     t.bigint "job_definition_id", null: false
     t.datetime "created_at"
@@ -171,18 +174,18 @@ ActiveRecord::Schema.define(version: 20191124042773) do
     t.index ["user_id", "job_definition_id"], name: "index_kuroko2_stars_on_user_id_and_job_definition_id", unique: true
   end
 
-  create_table "tags", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4" do |t|
+  create_table "tags", id: :serial, force: :cascade do |t|
     t.string "name", limit: 100, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["name"], name: "index_kuroko2_tags_on_name", unique: true
   end
 
-  create_table "ticks", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4" do |t|
+  create_table "ticks", id: :serial, force: :cascade do |t|
     t.datetime "at"
   end
 
-  create_table "tokens", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4" do |t|
+  create_table "tokens", id: :serial, force: :cascade do |t|
     t.string "uuid", limit: 36, null: false
     t.bigint "job_definition_id"
     t.integer "job_definition_version"
@@ -199,7 +202,7 @@ ActiveRecord::Schema.define(version: 20191124042773) do
     t.index ["status"], name: "status"
   end
 
-  create_table "users", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4" do |t|
+  create_table "users", force: :cascade do |t|
     t.string "provider", limit: 180, default: "google_oauth2", null: false
     t.string "uid", limit: 180, null: false
     t.string "name", limit: 180, default: "", null: false
@@ -215,16 +218,16 @@ ActiveRecord::Schema.define(version: 20191124042773) do
     t.index ["uid"], name: "uid", unique: true
   end
 
-  create_table "workers", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4" do |t|
+  create_table "workers", id: :serial, force: :cascade do |t|
     t.string "hostname", limit: 180, null: false
-    t.integer "worker_id", limit: 1, null: false
+    t.integer "worker_id", limit: 2, null: false
     t.string "queue", limit: 180, default: "@default", null: false
     t.boolean "working", default: false, null: false
     t.integer "execution_id"
-    t.boolean "suspendable", default: false, null: false
-    t.boolean "suspended", default: false, null: false
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean "suspendable", default: false, null: false
+    t.boolean "suspended", default: false, null: false
     t.index ["hostname", "worker_id"], name: "hostname", unique: true
   end
 
