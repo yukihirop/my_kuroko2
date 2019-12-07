@@ -26,5 +26,6 @@ module Kuroko2
     # kuroko2のバージョンが上がり、こちらの問題が解決したらこのコードは消してほしい。
     # https://github.com/cookpad/kuroko2/issues/125#issue-378985754
     config.active_record.table_name_prefix = 'kuroko2_'
+    config.autoload_paths << Rails.root.join("lib")
   end
 end
