@@ -61,6 +61,32 @@ mysql> show tables;
 21 rows in set (0.00 sec)
 ```
 
+## dockerで開発する
+
+google_oauth2のcallbackURL( `http://127.0.0.1:3000/auth/google_oauth2/callback` )を設定する。
+
+envファイルを用意する。
+
+```
+touch .env.sample .env.dev
+```
+
+```
+docker-compose build
+
+# この二つのコマンド実行には時間がかかる。原因はわかってない。
+docker run app bundle exec rails db:create
+docker run app bundle exec rails db:migrate SCOPE=kuroko2
+
+docker-compose up -d
+```
+
+起動を確認する。
+
+```
+docker-compose ps
+```
+
 ## 設定の仕方
 
 公式ドキュメントを参考にしてください。
