@@ -40,7 +40,7 @@ namespace :deploy do
 
   desc 'Restart application'
   task :restart do
-    if ENV.fetch('UPDATE_ENV') == 'true'
+    if ENV.fetch('UPDATE_ENV', 'false') == 'true'
       invoke 'unicorn:stop'
       invoke 'unicorn:start'
     else
