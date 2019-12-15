@@ -1,0 +1,43 @@
+version: "3"
+services:
+  app:
+    build: .
+    env_file:
+      - ./.env.dev
+    restart: always
+    command: /bin/sh -c "mkdir -p ./tmp/pids && ./bin/rails s -p 3000 -b '0.0.0.0'"
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/app:cached
+      - bundle:/app/vendor/bundle
+    depends_on:
+      - db
+  executor: &base
+    build: .
+    env_file:
+      - ./.env.dev
+    restart: always
+    volumes:
+      - .:/app:cached
+    command: ./bin/rails runner Kuroko2::Servers::CommandExecutor.new.run
+    depends_on:
+      - db
+  scheduler:
+    <<: *base
+    command: ./bin/rails runner Kuroko2::Servers::JobScheduler.new.run
+  processor:
+    <<: *base
+    command: ./bin/rails runner Kuroko2::Servers::WorkflowProcessor.new.run
+  db:
+    image: postgres:10.1
+    ports:
+      - "5555:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: ${PG_USER}
+      POSTGRES_PASSWORD: ${PG_PASSWORD}
+volumes:
+  db_data:
+  bundle:

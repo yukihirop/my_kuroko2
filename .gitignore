@@ -18,3 +18,7 @@
 
 .byebug_history
 .env
+.env.dev
+
+certs/*
+!certs/.keep

@@ -1,5 +1,11 @@
 # my kuroko2
 
+## 注意🚨(自分向け)
+
+- 外部IPはエフェメラルでなく、静的IPなので注意(300円/月)
+- ドメインyukihirop.meも課金対象(2500円/年)
+- 使ってない時はVMインスタンスは停止するようにする
+
 ## 開発環境
 
 - Rails (5.1.7)
@@ -59,6 +65,32 @@ mysql> show tables;
 | kuroko2_workers                 |
 +---------------------------------+
 21 rows in set (0.00 sec)
+```
+
+## dockerで開発する
+
+google_oauth2のcallbackURL( `http://127.0.0.1:3000/auth/google_oauth2/callback` )を設定する。
+
+envファイルを用意する。
+
+```
+touch .env.sample .env.dev
+```
+
+```
+docker-compose build
+
+# この二つのコマンド実行には時間がかかる。原因はわかってない。
+docker run app bundle exec rails db:create
+docker run app bundle exec rails db:migrate SCOPE=kuroko2
+
+docker-compose up -d
+```
+
+起動を確認する。
+
+```
+docker-compose ps
 ```
 
 ## 設定の仕方
