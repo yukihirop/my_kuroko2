@@ -10,7 +10,7 @@
 
 - Rails (5.1.7)
 - ruby (ruby 2.5.3p105 (2018-10-18 revision 65156) [x86_64-darwin18])
-- mysql (mysql  Ver 14.14 Distrib 5.7.28, for osx10.14 (x86_64) using  EditLine wrapper)
+- psql (PostgreSQL) 11.5
 - kuroko2 (0.5.2)
 
 ## 環境構築
