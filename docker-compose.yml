@@ -10,6 +10,7 @@ services:
       - "3000:3000"
     volumes:
       - .:/app:cached
+      - bundle:/app/vendor/bundle
     depends_on:
       - db
   executor: &base
@@ -39,3 +40,4 @@ services:
       POSTGRES_PASSWORD: ${PG_PASSWORD}
 volumes:
   db_data:
+  bundle:

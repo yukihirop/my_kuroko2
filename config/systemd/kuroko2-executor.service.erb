@@ -1,0 +1,20 @@
+[Unit]
+Description=Kuroko2 executor
+
+[Service]
+Environment=LANG=en_US.UTF-8
+Environment=RAILS_ENV=production
+Environment=NUM_WORKERS=8
+Environment=QUEUE=@default
+Environment=PG_USER=<%= ENV.fetch('PG_USER') %>
+Environment=PG_PASSWORD=<%= ENV.fetch('PG_PASSWORD') %>
+Environment=PG_HOST=<%= ENV.fetch('PG_HOST') %>
+User=<%= ENV.fetch('DEPLOY_SSH_USER') %>
+WorkingDirectory=<%= ENV.fetch('DEPLOY_TO') %>
+ExecStart=<%= ENV.fetch('DEPLOY_HOME') %>/.rbenv/shims/bundle exec rails runner 'Kuroko2::Servers::CommandExecutor.new(log: nil, daemonize: false).run'
+KillMode=process
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,15 @@
+export DEPLOY_TO=/var/www/kuroko2/current
+export DEPLOY_HOME=
+export DEPLOY_HOST=
+export DEPLOY_BRANCH=master
+export DEPLOY_SSH_USER=
+export DEPLOY_SSH_KEY=
+
+export GOOGLE_CLIENT_ID=
+export GOOGLE_CLIENT_SECRET=
+export GOOGLE_HOSTED_DOMAIN=gsuite.domain
+export PG_USER=postgres
+export PG_PASSWORD=
+export PG_HOST=localhost
+export SLACK_WEBHOOK_URL=
+export SECRET_KEY_BASE=
