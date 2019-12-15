@@ -36,6 +36,8 @@ group :development, :test do
   gem 'capistrano-bundler'
   gem 'capistrano-rails'
   gem 'capistrano-rbenv'
+  gem 'capistrano-env_config'
+  gem 'capistrano-systemd-multiservice', require: false
 end
 
 group :development do

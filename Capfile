@@ -5,6 +5,14 @@ require "capistrano/rbenv"
 require "capistrano/bundler"
 require "capistrano/rails/assets"
 require "capistrano/rails/migrations"
+require 'capistrano/console'
+require 'capistrano/env_config'
+
+require 'capistrano/systemd/multiservice'
+install_plugin Capistrano::Systemd::MultiService.new_service('kuroko2-executor')
+install_plugin Capistrano::Systemd::MultiService.new_service('kuroko2-processor')
+install_plugin Capistrano::Systemd::MultiService.new_service('kuroko2-scheduler')
+
 
 # Load the SCM plugin appropriate to your project:
 #

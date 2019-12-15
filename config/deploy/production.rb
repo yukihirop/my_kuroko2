@@ -2,7 +2,7 @@ server ENV.fetch('DEPLOY_HOST'), user: ENV.fetch('DEPLOY_SSH_USER'), roles: %w{a
 
 set :ssh_options, {
   user: ENV.fetch('DEPLOY_SSH_USER'),
-  keys: %w("#{ENV.fetch('DEPLOY_SSH_KEY')}"),
+  keys: %w(~/.ssh/id_rsa "#{ENV.fetch('DEPLOY_SSH_KEY')}"),
   forward_agent: true,
   auth_methods: %w(publickey)
 }
