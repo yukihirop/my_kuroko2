@@ -97,7 +97,7 @@ GEM
     concurrent-ruby (1.1.5)
     crass (1.0.5)
     dalli (2.7.10)
-    diffy (3.3.0)
+    diffy (3.4.2)
     dotenv (0.11.1)
       dotenv-deployment (~> 0.0.2)
     dotenv-deployment (0.0.2)
